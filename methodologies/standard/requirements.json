@@ -1,0 +1,4 @@
+{
+  "_about": "The standard methodology needs no external tools. It uses the project's own test runner, plus the mutation and property-testing tools of its stack when they are present.",
+  "requirements": []
+}

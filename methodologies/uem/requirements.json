@@ -1,0 +1,73 @@
+{
+  "_about": "Tools required by the UEM methodology. Sources, versions and commands are fixed here on purpose: the executor installs exactly these, never a source it found by searching. Verified 2026-11-06. Each install needs the user's explicit approval (maestro tools <project> --approve <id>).",
+  "requirements": [
+    {
+      "id": "superpowers",
+      "name": "Superpowers (skills: brainstorming, writing-plans, test-driven-development, verification-before-completion, requesting-code-review, using-git-worktrees)",
+      "source": "https://github.com/obra/superpowers",
+      "license": "MIT",
+      "version": "v7.0.2",
+      "scope": "user (Antigravity plugin, ~/.gemini/config/plugins/superpowers)",
+      "check": {"type": "agy-plugin", "name": "superpowers", "min_version": "7.0.0"},
+      "install": [
+        "git clone --depth 1 --branch v7.0.2 https://github.com/obra/superpowers \"{tmp}/superpowers\"",
+        "agy plugin install \"{tmp}/superpowers\""
+      ]
+    },
+    {
+      "id": "egm",
+      "name": "Elephant-Goldfish Model (skills: egm-brainstorm, egm-review, egm-draft; fresh-context adversarial review)",
+      "source": "https://github.com/google/elephant-goldfish-model",
+      "license": "Apache-2.0",
+      "version": "v0.1.0",
+      "scope": "user (Antigravity plugin, ~/.gemini/config/plugins/egm)",
+      "check": {"type": "agy-plugin", "name": "egm", "min_version": "0.1.0"},
+      "install": [
+        "git clone --depth 1 --branch v0.1.0 https://github.com/google/elephant-goldfish-model \"{tmp}/egm\"",
+        "agy plugin install \"{tmp}/egm\""
+      ]
+    },
+    {
+      "id": "harness-creator",
+      "name": "Harness Engineering: harness-creator skill (AGENTS.md, feature_list.json, init.sh, progress and handoff files)",
+      "source": "https://github.com/walkinglabs/learn-harness-engineering",
+      "license": "MIT",
+      "version": "commit a9342ff471f2c0e60be0c08b9f4a7c502df4e442",
+      "scope": "project (<project>/.agents/skills/harness-creator)",
+      "check": {"type": "path", "path": "{project}/.agents/skills/harness-creator/SKILL.md"},
+      "install": [
+        "git clone https://github.com/walkinglabs/learn-harness-engineering \"{tmp}/harness\"",
+        "git -C \"{tmp}/harness\" checkout a9342ff471f2c0e60be0c08b9f4a7c502df4e442",
+        "copy the folder \"{tmp}/harness/skills/harness-creator\" to \"{project}/.agents/skills/harness-creator\""
+      ]
+    },
+    {
+      "id": "ecc",
+      "name": "Everything Claude Code, minimal profile for Antigravity (rules, workflows, skills, agents in .agents/)",
+      "source": "https://github.com/affaan-m/ecc (npm package ecc-universal)",
+      "license": "MIT",
+      "version": "2.2.3",
+      "scope": "project (<project>/.agents/)",
+      "optional": true,
+      "check": {"type": "path", "path": "{project}/.agents/rules"},
+      "install": [
+        "cd \"{project}\" && npx ecc-universal@2.2.3 install --profile minimal --target antigravity"
+      ],
+      "note": "Pinned exact version. Writes into <project>/.agents/; review the diff before committing it."
+    },
+    {
+      "id": "agentshield",
+      "name": "AgentShield security scanner (secrets, tool and shell permissions, MCP configuration)",
+      "source": "https://github.com/affaan-m/agentshield (npm package ecc-agentshield)",
+      "license": "MIT",
+      "version": "1.6.0",
+      "scope": "project (pinned devDependency; needs a package.json)",
+      "check": {"type": "npm-dev-dependency", "name": "ecc-agentshield", "version": "1.6.0"},
+      "install": [
+        "cd \"{project}\" && npm install --save-dev --save-exact ecc-agentshield@1.6.0"
+      ],
+      "run": "npx --no-install ecc-agentshield scan --path .",
+      "note": "Never `npx --yes ecc-agentshield`: only the pinned, installed version runs. Projects without package.json run it in CI instead."
+    }
+  ]
+}

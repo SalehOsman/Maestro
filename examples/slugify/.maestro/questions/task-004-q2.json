@@ -1,0 +1,12 @@
+{
+  "id": "task-004-q2",
+  "task": "004",
+  "kind": "plan",
+  "question": "[plan checkpoint] Updated plan for task 004 addressing checkpoint feedback: verified multilingual script preservation ([\\W_]+ regex), non-string TypeError, and empty slug ValueError with complete TDD test suite covering all acceptance criteria.",
+  "plan_path": ".maestro/plans/slugify.md",
+  "options": [
+    "APPROVED",
+    "corrections"
+  ],
+  "asked_at": "2026-11-06T18:49:43"
+}

@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+# local Maestro workspace and logs
+/.maestro/
+/logs/
+# temporary held-out test run folder (removed after each run)
+_maestro_heldout/
+# transient marker in any project
+.maestro/active.json

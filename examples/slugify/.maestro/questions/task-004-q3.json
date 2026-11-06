@@ -1,0 +1,12 @@
+{
+  "id": "task-004-q3",
+  "task": "004",
+  "kind": "plan",
+  "question": "[plan checkpoint] Revised plan addressing all reviewer corrections: (1) preserves Unicode combining marks (categories Mn, Mc following kept chars) using unicodedata to support tanween/harakat like 'مرحباً بك' -> 'مرحباً-بك', (2) adds named test test_slugify_unicode_combining_marks, (3) documents underscore treated as separator, with full TDD suite.",
+  "plan_path": ".maestro/plans/slugify.md",
+  "options": [
+    "APPROVED",
+    "corrections"
+  ],
+  "asked_at": "2026-11-06T18:51:07"
+}

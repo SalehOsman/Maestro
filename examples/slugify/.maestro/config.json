@@ -1,0 +1,23 @@
+{
+  "methodology": "custom",
+  "stack": "python",
+  "test_cmd": "python -m unittest discover -s src",
+  "verify_cmd": "python -m unittest discover -s src",
+  "mutation_cmd": "",
+  "heldout_cmd": "",
+  "base_branch": "main",
+  "branch_prefix": "feature/",
+  "review": {
+    "max_rounds": 2,
+    "full_review_paths": [],
+    "full_review_topics": [
+      "secrets",
+      "server",
+      "untrusted user input",
+      "authentication",
+      "payments",
+      "stored data"
+    ]
+  },
+  "delivery": "window"
+}

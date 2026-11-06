@@ -1,0 +1,59 @@
+# CI workflow for Maestro.
+# Note: GUI delivery (sender.py window, focus, and simulated keystrokes)
+# is not tested in CI on purpose, as CI environments run headless without
+# the Antigravity GUI application or display server integration.
+
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (${{ matrix.os }}, py${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        python-version: ["3.9", "3.12"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Configure Git identity
+        run: |
+          git config --global user.name "Maestro CI"
+          git config --global user.email "ci@example.com"
+
+      - name: Byte-compile scripts and installer
+        run: python -c "import glob, subprocess, sys; sys.exit(subprocess.run([sys.executable, '-m', 'py_compile', 'install.py', *sorted(glob.glob('scripts/*.py'))]).returncode)"
+
+      - name: Run test suite
+        run: python -m unittest discover -s tests -v
+
+  lang:
+    name: language-separation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check language separation
+        run: python scripts/check_lang.py

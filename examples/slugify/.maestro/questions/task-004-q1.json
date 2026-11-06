@@ -1,0 +1,12 @@
+{
+  "id": "task-004-q1",
+  "task": "004",
+  "kind": "plan",
+  "question": "[plan checkpoint] Slugify implementation using re.sub(r'[\\W_]+', '-', text.lower()).strip('-') to support multilingual scripts (including Arabic) and digits while replacing spaces/punctuation runs with a hyphen; raises TypeError for non-strings and ValueError for empty/punctuation-only inputs. TDD with 4 named unit tests covering all acceptance criteria.",
+  "plan_path": ".maestro/plans/slugify.md",
+  "options": [
+    "APPROVED",
+    "corrections"
+  ],
+  "asked_at": "2026-11-06T18:47:03"
+}

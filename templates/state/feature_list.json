@@ -1,0 +1,14 @@
+{
+  "_about": "System of record for features. The executor sets status and evidence; only the reviewer sets review. One feature active at a time.",
+  "features": [
+    {
+      "id": "example-feature",
+      "behavior": "What the feature does, from the user's point of view.",
+      "verification": "The command(s) that prove it works.",
+      "status": "not-started",
+      "evidence": [],
+      "review": "pending",
+      "review_rounds": 0
+    }
+  ]
+}

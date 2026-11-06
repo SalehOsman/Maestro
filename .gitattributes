@@ -1,0 +1,4 @@
+# The Unix launcher must keep LF endings or `sh` fails on macOS/Linux.
+maestro   text eol=lf
+*.py      text eol=lf
+*.cmd     text eol=crlf
