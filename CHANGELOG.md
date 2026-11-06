@@ -5,11 +5,11 @@
 - **Documentation split**: Complete documentation in English (`docs/en/`), with parallel Arabic documentation for the README and quick start guide (`README.ar.md` and `docs/ar/quickstart.md`).
 - **Comprehensive documentation in `docs/en/`**: Added `docs/en/quickstart.md` (end-to-end walkthrough, state files reference, and troubleshooting) and `docs/en/architecture.md` (deep dive into delivery mechanics, MCP protocols, and quality gates).
 - **Official test suite**: 82 unit tests with strict process-level environment isolation (`HOME`, `USERPROFILE`, `LOCALAPPDATA`, `MAESTRO_HELDOUT_HOME`, `MAESTRO_MCP_LOG`) and mock execution boundaries.
-- **GitHub Actions CI**: Automated cross-platform CI matrix across Windows, Linux, and macOS with Python 3.9 and 3.12, including an automated language separation check.
+- **GitHub Actions CI**: Automated cross-platform CI matrix across Windows, Linux, and macOS with Python 3.10 and 3.14, including an automated language separation check.
 - **Language validation script**: Added `scripts/check_lang.py` enforcing Unicode Arabic character restrictions in English documentation and English prose restrictions in Arabic files.
 - **Version management**: Added `scripts/version.py` and `maestro --version` CLI flag.
 - **Configurable MCP logging**: `scripts/maestro_mcp.py` respects `MAESTRO_MCP_LOG` environment variable for test and runtime redirection.
-- **Python 3.9 minimum requirement**: Updated prerequisite checks in `install.py` and documentation to require Python 3.9 or newer.
+- **Python 3.10 minimum requirement**: Updated prerequisite checks in `install.py` and documentation to require Python 3.10 or newer. The first CI run showed that `Path.write_text(newline=)` needs 3.10, and that Ubuntu 26.04 runners have no Python 3.9.
 - **Python 3.8 MCP compatibility**: Fallback for `str.removeprefix` in `scripts/maestro_mcp.py`.
 - **New relay example**: Added `examples/slugify` (verified multi-task relay demonstrating briefs, plans, questions, and review rounds), replacing `examples/calculator`.
 - **Tested environment**: Validated on Windows 11, Antigravity 2.29, Gemini 3.8 Flash (High reasoning), and Claude Code.

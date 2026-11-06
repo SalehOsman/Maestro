@@ -19,7 +19,7 @@ SKILL_SRC = HOME / "skill" / "maestro" / "SKILL.md"
 SKILL_DST = Path.home() / ".claude" / "skills" / "maestro"
 MCP_CFG = HOME / "scripts" / "agy_mcp_config.py"
 AGY_DATA = Path.home() / ".gemini" / "antigravity"
-MIN_PYTHON = (3, 9)
+MIN_PYTHON = (3, 10)
 
 
 def maestro_command():

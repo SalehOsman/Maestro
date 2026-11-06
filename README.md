@@ -42,7 +42,7 @@ Other models, reasoning levels, and operating systems have not been tested.
 
 - [Claude Code](https://claude.com/claude-code) (CLI or desktop app)
 - The **Antigravity agent app**, signed in (*Antigravity IDE*, the editor, is a separate app and is not used)
-- Python 3.9+ (standard library only), available as `python` on Windows and `python3` on macOS/Linux
+- Python 3.10+ (standard library only), available as `python` on Windows and `python3` on macOS/Linux
 - macOS: Accessibility permission for the terminal or app that runs Claude Code (required to send Return to Antigravity)
 - Linux: `xdg-utils` (and `xdotool` on X11 to press Enter automatically)
 

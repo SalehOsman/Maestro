@@ -66,23 +66,23 @@ class TestInstall(unittest.TestCase):
         shutil.rmtree(SESSION_TEMP, ignore_errors=True)
 
     def test_min_python_constant(self):
-        """MIN_PYTHON must be defined as (3, 9)."""
+        """MIN_PYTHON must be defined as (3, 10)."""
         self.assertTrue(hasattr(install, "MIN_PYTHON"), "install.py must define MIN_PYTHON")
-        self.assertEqual(install.MIN_PYTHON, (3, 9))
+        self.assertEqual(install.MIN_PYTHON, (3, 10))
 
-    def test_check_prerequisites_fails_below_3_9(self):
-        """Python versions below (3, 9) must report 'Python 3.9 or newer'."""
-        with patch.object(install.sys, "version_info", (3, 8, 0, "final", 0)):
-            missing = install.check_prerequisites()
-            self.assertIsNotNone(missing, "check_prerequisites should return the missing prerequisites list")
-            self.assertIn("Python 3.9 or newer", missing)
-
-    def test_check_prerequisites_passes_3_9_and_above(self):
-        """Python versions at or above (3, 9) must not report Python as missing."""
+    def test_check_prerequisites_fails_below_3_10(self):
+        """Python versions below (3, 10) must report 'Python 3.10 or newer'."""
         with patch.object(install.sys, "version_info", (3, 9, 0, "final", 0)):
             missing = install.check_prerequisites()
             self.assertIsNotNone(missing, "check_prerequisites should return the missing prerequisites list")
-            self.assertNotIn("Python 3.9 or newer", missing)
+            self.assertIn("Python 3.10 or newer", missing)
+
+    def test_check_prerequisites_passes_3_10_and_above(self):
+        """Python versions at or above (3, 10) must not report Python as missing."""
+        with patch.object(install.sys, "version_info", (3, 10, 0, "final", 0)):
+            missing = install.check_prerequisites()
+            self.assertIsNotNone(missing, "check_prerequisites should return the missing prerequisites list")
+            self.assertNotIn("Python 3.10 or newer", missing)
             self.assertFalse(any("Python" in m for m in missing))
 
 

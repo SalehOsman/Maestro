@@ -11,7 +11,7 @@ Maestro has zero third-party dependencies and relies entirely on Python's standa
    git clone https://github.com/SalehOsman/Maestro.git
    cd Maestro
    ```
-2. Ensure you have **Python 3.9 or newer** installed (`python` on Windows, `python3` on macOS and Linux).
+2. Ensure you have **Python 3.10 or newer** installed (`python` on Windows, `python3` on macOS and Linux).
 
 No virtual environment or package installation is required.
 
@@ -45,4 +45,4 @@ Both must exit with status code 0.
 ## Pull Request Process
 
 1. Keep pull requests focused on a single task or improvement.
-2. GitHub Actions CI must pass on all three supported operating systems (**Windows**, **Linux**, and **macOS**) across both **Python 3.9** and **Python 3.12**.
+2. GitHub Actions CI must pass on all three supported operating systems (**Windows**, **Linux**, and **macOS**) across both **Python 3.10** and **Python 3.14**.

@@ -11,7 +11,7 @@ This guide walks you through installing Maestro, setting up a project, and runni
 Make sure you have installed and configured:
 1. **Claude Code** (CLI or desktop application).
 2. The **Antigravity agent app**, signed in. (*Note: Antigravity IDE, the code editor, is a separate application and is not used.*)
-3. **Python 3.9 or newer** (using standard library only), available as `python` on Windows or `python3` on macOS and Linux.
+3. **Python 3.10 or newer** (using standard library only), available as `python` on Windows or `python3` on macOS and Linux.
 4. **macOS**: Accessibility permission for your terminal or host app running Claude Code. This allows Maestro to send the Return key to Antigravity. macOS prompts for this on first execution.
 5. **Linux**: `xdg-utils` (and `xdotool` on X11 if you want Enter pressed automatically).
 

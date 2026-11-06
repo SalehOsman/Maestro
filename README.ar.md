@@ -42,7 +42,7 @@
 
 - [Claude Code](https://claude.com/claude-code) (واجهة سطر الأوامر أو تطبيق سطح المكتب)
 - **تطبيق وكيل Antigravity** مع تسجيل الدخول (ملاحظة: Antigravity IDE (محرّر الكود) تطبيق منفصل ولا يُستخدم هنا)
-- بيئة Python 3.9 أو أحدث (المكتبة القياسية فقط)، وتكون متوفرة كأمر `python` على Windows و`python3` على macOS وLinux
+- بيئة Python 3.10 أو أحدث (المكتبة القياسية فقط)، وتكون متوفرة كأمر `python` على Windows و`python3` على macOS وLinux
 - نظام macOS: إذن إمكانية الوصول (Accessibility) للطرفية أو التطبيق الذي يشغّل Claude Code (مطلوب لإرسال مفتاح الإدخال Return إلى Antigravity)
 - أنظمة Linux: حزمة `xdg-utils` (وأداة `xdotool` على واجهة X11 للضغط على مفتاح Enter تلقائياً)
 
