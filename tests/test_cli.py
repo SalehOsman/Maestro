@@ -346,6 +346,65 @@ class TestCliNewStatusRelease(BaseCliTest):
         self.assertEqual(code, 0)
         self.assertIn("no active task", out)
 
+    def test_status_with_duplicate_feature_ids(self):
+        proj = os.path.join(self.test_dir, "proj_status_dup")
+        os.makedirs(proj, exist_ok=True)
+        self.run_cli("init", proj)
+        fl_path = os.path.join(proj, "feature_list.json")
+        fl = [
+            {"id": "dup1", "status": "passing"},
+            {"id": "dup1", "status": "not-started"},
+            {"id": "dup2", "status": "passing"},
+            {"id": "dup2", "status": "passing"},
+            {"id": "unique", "status": "passing"}
+        ]
+        with open(fl_path, "w", encoding="utf-8") as f:
+            json.dump(fl, f, indent=2)
+
+        code, out, _ = self.run_cli("status", proj)
+        self.assertEqual(code, 0)
+        lines = out.strip().splitlines()
+        self.assertEqual(lines[-1], "active: none")
+        self.assertTrue(any("WARN" in l and "dup1" in l for l in lines))
+        self.assertTrue(any("WARN" in l and "dup2" in l for l in lines))
+
+    def test_status_with_invalid_and_unsupported_feature_list(self):
+        proj = os.path.join(self.test_dir, "proj_status_invalid")
+        os.makedirs(proj, exist_ok=True)
+        self.run_cli("init", proj)
+        fl_path = os.path.join(proj, "feature_list.json")
+
+        # Invalid JSON syntax
+        with open(fl_path, "w", encoding="utf-8") as f:
+            f.write("{invalid json syntax")
+        code, out, _ = self.run_cli("status", proj)
+        self.assertEqual(code, 0)
+        self.assertIn("WARN", out)
+        self.assertTrue(out.strip().endswith("active: none"))
+
+        # Unsupported shape
+        with open(fl_path, "w", encoding="utf-8") as f:
+            json.dump({"items": []}, f)
+        code, out, _ = self.run_cli("status", proj)
+        self.assertEqual(code, 0)
+        self.assertIn("WARN", out)
+        self.assertTrue(out.strip().endswith("active: none"))
+
+    def test_status_with_non_object_entries(self):
+        proj = os.path.join(self.test_dir, "proj_status_non_obj")
+        os.makedirs(proj, exist_ok=True)
+        self.run_cli("init", proj)
+        fl_path = os.path.join(proj, "feature_list.json")
+        fl = ["not-an-object", {"id": "f1", "status": "passing"}, 999]
+        with open(fl_path, "w", encoding="utf-8") as f:
+            json.dump(fl, f, indent=2)
+
+        code, out, _ = self.run_cli("status", proj)
+        self.assertEqual(code, 0)
+        self.assertIn("WARN", out)
+        self.assertIn("not object", out)
+        self.assertTrue(out.strip().endswith("active: none"))
+
 
 class TestCliAnswer(BaseCliTest):
 
@@ -511,6 +570,146 @@ class TestCliReview(BaseCliTest):
         feat = data["features"][0]
         self.assertEqual(feat.get("review"), "accepted")
         self.assertEqual(feat.get("review_rounds"), 2)
+
+    def test_review_verdict_list_format(self):
+        fl_path = os.path.join(self.proj, "feature_list.json")
+        raw_bytes = json.dumps([
+            {"id": "feat-ar", "title": "ميزة تجريبية", "status": "passing", "description": "وصف بالعربية"}
+        ], ensure_ascii=False, indent=2).encode("utf-8")
+        with open(fl_path, "wb") as f:
+            f.write(raw_bytes)
+
+        code, out, err = self.run_cli("review", self.proj, "verdict", "feat-ar", "accepted")
+        self.assertEqual(code, 0)
+        with open(fl_path, "rb") as f:
+            content = f.read()
+        self.assertFalse(content.startswith(b"\xef\xbb\xbf"))  # No BOM
+        self.assertIn("ميزة تجريبية".encode("utf-8"), content)  # Arabic text not escaped
+        data = json.loads(content.decode("utf-8"))
+        self.assertIsInstance(data, list)
+        self.assertEqual(data[0]["id"], "feat-ar")
+        self.assertEqual(data[0]["status"], "passing")
+        self.assertEqual(data[0]["review"], "accepted")
+        self.assertEqual(data[0]["title"], "ميزة تجريبية")
+        self.assertEqual(data[0]["description"], "وصف بالعربية")
+
+    def test_review_verdict_dict_format(self):
+        fl_path = os.path.join(self.proj, "feature_list.json")
+        fl = {
+            "version": "1.0",
+            "features": [{"id": "feat-dict", "status": "passing", "extra": 42}]
+        }
+        with open(fl_path, "w", encoding="utf-8") as f:
+            json.dump(fl, f, indent=2)
+
+        code, out, _ = self.run_cli("review", self.proj, "verdict", "feat-dict", "accepted")
+        self.assertEqual(code, 0)
+        with open(fl_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        self.assertIsInstance(data, dict)
+        self.assertEqual(data["version"], "1.0")
+        self.assertEqual(data["features"][0]["review"], "accepted")
+        self.assertEqual(data["features"][0]["extra"], 42)
+
+    def test_review_verdict_mixed_entries(self):
+        fl_path = os.path.join(self.proj, "feature_list.json")
+        fl = [
+            {"id": "f1", "title": "T1", "description": "D1", "status": "not-started"},
+            {"id": "f2", "category": "C2", "behavior": "B2", "status": "passing"}
+        ]
+        with open(fl_path, "w", encoding="utf-8") as f:
+            json.dump(fl, f, indent=2)
+
+        code, out, _ = self.run_cli("review", self.proj, "verdict", "f2", "accepted")
+        self.assertEqual(code, 0)
+        with open(fl_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        self.assertEqual(list(data[0].keys()), ["id", "title", "description", "status"])
+        self.assertEqual(data[1]["category"], "C2")
+        self.assertEqual(data[1]["behavior"], "B2")
+        self.assertEqual(data[1]["review"], "accepted")
+
+    def test_review_verdict_non_object_entry_preserved(self):
+        fl_path = os.path.join(self.proj, "feature_list.json")
+        fl = [
+            "a plain string entry",
+            {"id": "f1", "status": "passing"},
+            12345
+        ]
+        with open(fl_path, "w", encoding="utf-8") as f:
+            json.dump(fl, f, indent=2)
+
+        code, out, _ = self.run_cli("review", self.proj, "verdict", "f1", "accepted")
+        self.assertEqual(code, 0)
+        with open(fl_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        self.assertEqual(data[0], "a plain string entry")
+        self.assertEqual(data[1]["review"], "accepted")
+        self.assertEqual(data[2], 12345)
+
+    def test_review_verdict_duplicate_target_id(self):
+        fl_path = os.path.join(self.proj, "feature_list.json")
+        fl = [
+            {"id": "feat-dup", "status": "passing"},
+            {"id": "feat-dup", "status": "passing"}
+        ]
+        original_content = json.dumps(fl, indent=2).encode("utf-8")
+        with open(fl_path, "wb") as f:
+            f.write(original_content)
+
+        code, out, err = self.run_cli("review", self.proj, "verdict", "feat-dup", "accepted")
+        self.assertEqual(code, 1)
+        self.assertIn("feat-dup", out + err)
+        self.assertIn("2", out + err)
+        with open(fl_path, "rb") as f:
+            post_content = f.read()
+        self.assertEqual(post_content, original_content)  # byte-identical
+
+    def test_review_verdict_duplicate_other_id(self):
+        fl_path = os.path.join(self.proj, "feature_list.json")
+        fl = [
+            {"id": "target", "status": "passing"},
+            {"id": "other", "status": "passing"},
+            {"id": "other", "status": "not-started"}
+        ]
+        with open(fl_path, "w", encoding="utf-8") as f:
+            json.dump(fl, f, indent=2)
+
+        code, out, err = self.run_cli("review", self.proj, "verdict", "target", "accepted")
+        self.assertEqual(code, 0)
+        self.assertIn("WARN", out + err)
+        self.assertIn("other", out + err)
+        with open(fl_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        self.assertEqual(data[0]["review"], "accepted")
+
+    def test_review_verdict_unsupported_format(self):
+        fl_path = os.path.join(self.proj, "feature_list.json")
+        with open(fl_path, "w", encoding="utf-8") as f:
+            json.dump({"items": []}, f)
+        code, out, err = self.run_cli("review", self.proj, "verdict", "target", "accepted")
+        self.assertEqual(code, 1)
+        self.assertIn('unsupported feature_list.json format: expected a list or {"features": [...]}', out + err)
+
+        with open(fl_path, "w", encoding="utf-8") as f:
+            f.write('"a plain json string"')
+        code, out, err = self.run_cli("review", self.proj, "verdict", "target", "accepted")
+        self.assertEqual(code, 1)
+        self.assertIn('unsupported feature_list.json format: expected a list or {"features": [...]}', out + err)
+
+    def test_review_verdict_skips_entries_without_id(self):
+        fl_path = os.path.join(self.proj, "feature_list.json")
+        fl = [
+            {"title": "No id 1"},
+            {"title": "No id 2", "id": None},
+            {"id": "target", "status": "passing"}
+        ]
+        with open(fl_path, "w", encoding="utf-8") as f:
+            json.dump(fl, f, indent=2)
+
+        code, out, err = self.run_cli("review", self.proj, "verdict", "target", "accepted")
+        self.assertEqual(code, 0)
+        self.assertNotIn("duplicate", (out + err).lower())
 
 
 class TestCliTestDiff(BaseCliTest):

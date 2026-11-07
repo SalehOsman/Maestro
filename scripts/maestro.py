@@ -22,6 +22,7 @@ While a task is in flight, <project>/.maestro/active.json names it. The executor
 refuse to work without it, so Antigravity used outside Maestro can never block on a question.
 """
 import argparse
+from collections import Counter
 import hashlib
 import json
 import os
@@ -60,6 +61,23 @@ def write_text(path, text):
     tmp = path.with_name(path.name + ".tmp")
     tmp.write_text(text, encoding="utf-8", newline="\n")
     os.replace(tmp, path)
+
+
+def load_feature_list(path):
+    p = Path(path)
+    try:
+        text = p.read_text(encoding="utf-8-sig")
+    except OSError as e:
+        raise Fail(f"unreadable feature_list.json: {e}")
+    try:
+        data = json.loads(text)
+    except Exception as e:
+        raise Fail(f"unreadable feature_list.json: {e}")
+    if isinstance(data, list):
+        return data, data
+    if isinstance(data, dict) and isinstance(data.get("features"), list):
+        return data, data["features"]
+    raise Fail('unsupported feature_list.json format: expected a list or {"features": [...]}')
 
 
 class Project:
@@ -413,8 +431,25 @@ def cmd_review(a):
     fl = p.root / "feature_list.json"
     if not fl.exists():
         raise Fail("no feature_list.json at the project root")
-    data = json.loads(fl.read_text(encoding="utf-8-sig"))
-    for feat in data.get("features", []):
+    data, features = load_feature_list(fl)
+    counts = Counter()
+    for feat in features:
+        if isinstance(feat, dict):
+            fid = feat.get("id")
+            if fid is not None:
+                counts[fid] += 1
+
+    if counts.get(a.feature, 0) > 1:
+        raise Fail(f"duplicate feature id '{a.feature}' ({counts[a.feature]} entries) in feature_list.json")
+
+    other_dups = {fid: cnt for fid, cnt in counts.items() if cnt > 1 and fid != a.feature}
+    if other_dups:
+        dup_desc = ", ".join(f"{fid} ({cnt})" for fid, cnt in other_dups.items())
+        print(f"WARN: duplicate feature id(s) in feature_list.json: {dup_desc}")
+
+    for feat in features:
+        if not isinstance(feat, dict):
+            continue
         if feat.get("id") == a.feature:
             if a.verdict == "accepted" and feat.get("status") != "passing":
                 raise Fail(f"{a.feature} is '{feat.get('status')}', not 'passing'; it cannot be accepted")
@@ -587,6 +622,27 @@ def cmd_status(a):
         for q in sorted(p.questions.glob("task-*-q*.json")):
             answered = (p.questions / (q.stem + ".answer.md")).exists()
             print(f"{q.stem}  {'answered' if answered else 'WAITING FOR ANSWER'}")
+    fl = p.root / "feature_list.json"
+    if fl.exists():
+        try:
+            _, features = load_feature_list(fl)
+            non_objects = sum(1 for feat in features if not isinstance(feat, dict))
+            if non_objects:
+                msg = f"{non_objects} entry in feature_list.json is not an object" if non_objects == 1 else f"{non_objects} entries in feature_list.json are not objects"
+                print(f"WARN: {msg}")
+            counts = Counter()
+            for feat in features:
+                if isinstance(feat, dict):
+                    fid = feat.get("id")
+                    if fid is not None:
+                        counts[fid] += 1
+            for fid, cnt in counts.items():
+                if cnt > 1:
+                    print(f"WARN: duplicate feature id '{fid}' in feature_list.json ({cnt} entries)")
+        except Fail as e:
+            print(f"WARN: {e}")
+        except Exception as e:
+            print(f"WARN: could not read feature_list.json: {e}")
     cur = p.active()
     print(f"active: {'task-' + cur if cur else 'none'}")
     return 0
