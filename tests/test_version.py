@@ -61,9 +61,10 @@ class TestVersion(unittest.TestCase):
 
     def test_version_file_constant(self):
         import version
-        self.assertEqual(version.__version__, "0.6.0")
+        self.assertEqual(version.__version__, "0.6.1")
 
     def test_cli_version_flag(self):
+        import version
         maestro_py = os.path.join(SCRIPTS_DIR, "maestro.py")
         res = subprocess.run(
             [sys.executable, maestro_py, "--version"],
@@ -74,19 +75,19 @@ class TestVersion(unittest.TestCase):
         )
         self.assertEqual(res.returncode, 0)
         output = (res.stdout + res.stderr).strip()
-        self.assertEqual(output, "maestro 0.6.0")
+        self.assertEqual(output, f"maestro {version.__version__}")
 
     def test_mcp_server_info_version(self):
         import maestro_mcp
         import version
         self.assertEqual(maestro_mcp.SERVER["version"], version.__version__)
-        self.assertEqual(maestro_mcp.SERVER["version"], "0.6.0")
 
     def test_mcp_server_isolated_python_import(self):
         """Under python -I, the script directory is NOT in sys.path.
 
         maestro_mcp.py must explicitly add its directory to sys.path to load version.py.
         """
+        import version
         mcp_py = os.path.join(SCRIPTS_DIR, "maestro_mcp.py")
         proc = subprocess.Popen(
             [sys.executable, "-I", mcp_py],
@@ -112,7 +113,7 @@ class TestVersion(unittest.TestCase):
             self.assertIn("result", res)
             server_info = res["result"].get("serverInfo", {})
             self.assertEqual(server_info.get("name"), "maestro")
-            self.assertEqual(server_info.get("version"), "0.6.0")
+            self.assertEqual(server_info.get("version"), version.__version__)
         finally:
             if proc.poll() is None:
                 proc.kill()

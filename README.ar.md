@@ -18,7 +18,7 @@
 
 ## الحالة
 
-**الإصدار 0.6.0 (تجريبي).** يعتمد Maestro على آليات داخلية غير موثقة في Antigravity (انظر [الهيكلية: القيود](docs/en/architecture.md#limitations) (بالإنجليزية)).
+**الإصدار 0.6.1 (تجريبي).** يعتمد Maestro على آليات داخلية غير موثقة في Antigravity (انظر [الهيكلية: القيود](docs/en/architecture.md#limitations) (بالإنجليزية)).
 
 | المنصة | الحالة |
 |---|---|
@@ -105,10 +105,10 @@ python install.py --uninstall
 | المنهجية | الفئة المستهدفة | الأدوات الخارجية |
 |---|---|---|
 | `standard` (موصى بها) | أي مشروع | لا شيء؛ تستخدم مشغّل الاختبارات وأدوات التدقيق الخاصة بالمشروع نفسه. |
-| `uem` | مستخدمو منهجية الهندسة الموحدة | Superpowers و EGM و Harness Engineering و AgentShield و ECC (اختياري) |
+| `uem` | مستخدمو منهجية الهندسة الموحدة | [Superpowers](https://github.com/obra/superpowers) و [EGM](https://github.com/google/elephant-goldfish-model) و [Harness Engineering](https://github.com/walkinglabs/learn-harness-engineering) و [AgentShield](https://github.com/affaan-m/agentshield) و [ECC](https://github.com/affaan-m/ecc) (اختياري) |
 | `custom` | المشاريع ذات سير العمل المخصص | لا شيء؛ تطبّق عقد Maestro الأدنى، مع بقاء المراجعة الشاملة كاملة دون تغيير. |
 
-لا تُثبّت الأدوات الخارجية إلا بعد الحصول على **موافقتك الصريحة على كل أداة**، وبالاعتماد على **المصدر والإصدار المثبّت بدقة** المحددين في `methodologies/<name>/requirements.json`.
+لا تُثبّت الأدوات الخارجية إلا بعد الحصول على **موافقتك الصريحة على كل أداة**، وبالاعتماد على **المصدر والإصدار المثبّت بدقة** المحددين في `methodologies/<name>/requirements.json`. للاطلاع على مقارنة تفصيلية ومراحل العمل وخطوات تثبيت الأدوات، راجع [المنهجيات والأدوات](docs/en/methodologies.md) (بالإنجليزية).
 
 ## الأوامر
 
@@ -144,6 +144,7 @@ python install.py --uninstall
 ## التوثيق
 
 - [دليل البدء السريع](docs/ar/quickstart.md) - الإعداد المفصّل، وسير العمل من البداية إلى النهاية، وملفات حالة المشروع، واستكشاف الأخطاء وإصلاحها.
+- [المنهجيات والأدوات](docs/en/methodologies.md) (بالإنجليزية) - مقارنة بين منهجيات `standard` و `uem` و `custom`، ومتطلبات الأدوات ومصادرها الرسمية.
 - [الهيكلية والتصميم](docs/en/architecture.md) (بالإنجليزية) - نظرة معمقة على آلية تسليم المهام، وبروتوكول MCP، وبوابات الجودة، وقرارات التصميم.
 - [الأدوار والمسؤوليات](methodologies/ROLES.md) (بالإنجليزية) - تفصيل توزيع الأدوار وقواعد المراجعة.
 - [سجل التغييرات](CHANGELOG.md) (بالإنجليزية) - تاريخ إصدارات النسخ والتغييرات.

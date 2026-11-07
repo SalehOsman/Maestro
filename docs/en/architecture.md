@@ -127,7 +127,7 @@ If any check fails, the MCP tool throws an `Inactive` exception immediately, ins
 
 ## 6. Methodologies and Pinned Tool Management
 
-When a project is initialized, the user selects one of three executor methodologies:
+When a project is initialized, the user selects one of three executor methodologies (for complete lifecycle details, comparison, and tool sources, see [Methodologies and tools](methodologies.md)):
 
 1. **`standard` (recommended):** Maestro's zero-dependency workflow. Relies purely on the project's native test runner, compiler, and linter.
 2. **`uem`:** Unified Engineering Methodology. Integrates Superpowers, EGM, Harness Engineering, AgentShield, and ECC.
@@ -242,7 +242,7 @@ templates/
 skill/maestro/
   SKILL.md                   Claude Code skill definition and workflow rules
 docs/
-  en/                        English documentation suite (quickstart, architecture)
+  en/                        English documentation suite (quickstart, architecture, methodologies)
   ar/                        Arabic documentation suite (quickstart)
 examples/slugify/            End-to-end demonstration runs with briefs, plans, and reports
 tests/                       Automated test suite

@@ -61,8 +61,10 @@ Open the same project folder in Claude Code and invoke Maestro:
 
 You do not need to run `maestro init` manually. Claude invokes `init` behind the scenes, asks you which methodology to use, and configures the project:
 - **`standard` (recommended):** Maestro's built-in workflow. No external tools required; uses your project's existing test runners.
-- **`uem`:** Unified Engineering Methodology with Superpowers, EGM, and AgentShield.
+- **`uem`:** Unified Engineering Methodology with Superpowers, EGM, Harness Engineering, AgentShield, and ECC (optional).
 - **`custom`:** For teams with established custom workflows.
+
+When choosing a methodology, pick `standard` for immediate zero-dependency development, `uem` for formal multi-phase engineering and automated security scanning, or `custom` to preserve your own agent rules. If you select `uem`, external tools are never installed automatically: `maestro tools <project>` audits requirements, and you approve each tool individually before `maestro tools <project> --approve <id...>` writes an installation task with exact pinned commands. For an in-depth guide and official source links, see [Methodologies and tools](methodologies.md).
 
 *(If you prefer manual control, you can run `maestro init <project> [--methodology standard|uem|custom]` from your shell.)*
 

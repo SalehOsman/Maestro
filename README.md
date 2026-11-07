@@ -18,7 +18,7 @@ Maestro turns [Claude Code](https://claude.com/claude-code) into a supervising l
 
 ## Status
 
-**Version 0.6.0 (experimental).** Maestro relies on undocumented Antigravity internals (see [Architecture: Limitations](docs/en/architecture.md#limitations)).
+**Version 0.6.1 (experimental).** Maestro relies on undocumented Antigravity internals (see [Architecture: Limitations](docs/en/architecture.md#limitations)).
 
 | Platform | State |
 |---|---|
@@ -105,10 +105,10 @@ There are **two stop points** per feature: the plan checkpoint and the final rep
 | Methodology | For | External tools |
 |---|---|---|
 | `standard` (recommended) | Any project | None. Uses the project's own test runner and linters. |
-| `uem` | Unified Engineering Methodology users | Superpowers, EGM, Harness Engineering, AgentShield, ECC (optional) |
+| `uem` | Unified Engineering Methodology users | [Superpowers](https://github.com/obra/superpowers), [EGM](https://github.com/google/elephant-goldfish-model), [Harness Engineering](https://github.com/walkinglabs/learn-harness-engineering), [AgentShield](https://github.com/affaan-m/agentshield), [ECC](https://github.com/affaan-m/ecc) (optional) |
 | `custom` | Projects with their own workflow | None. Enforces Maestro's minimum contract; the full review remains intact. |
 
-External tools are installed only with your **explicit approval of each tool**, using the **source and pinned version** defined in `methodologies/<name>/requirements.json`.
+External tools are installed only with your **explicit approval of each tool**, using the **source and pinned version** defined in `methodologies/<name>/requirements.json`. For an in-depth comparison, detailed lifecycle phases, and tool installation steps, see [Methodologies and tools](docs/en/methodologies.md).
 
 ## Commands
 
@@ -144,6 +144,7 @@ Exit codes:
 ## Documentation
 
 - [Quick start guide](docs/en/quickstart.md) - Detailed setup, end-to-end workflow, project state files, and troubleshooting.
+- [Methodologies and tools](docs/en/methodologies.md) - Comparison of standard, uem, and custom methodologies, tool requirements, and official sources.
 - [Architecture and design](docs/en/architecture.md) - Deep dive into delivery, MCP protocol, quality gates, and design decisions.
 - [Roles and responsibilities](methodologies/ROLES.md) - Detailed role split and review rules.
 - [Changelog](CHANGELOG.md) - Version release history and changes.

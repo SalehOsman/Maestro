@@ -205,7 +205,6 @@ class TestMcpServer(unittest.TestCase):
             self.assertEqual(res["protocolVersion"], "2025-03-26")
             self.assertEqual(res["serverInfo"]["name"], "maestro")
             self.assertEqual(res["serverInfo"]["version"], version.__version__)
-            self.assertEqual(res["serverInfo"]["version"], "0.6.0")
         finally:
             s.close()
 

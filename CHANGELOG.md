@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.1 — 2026-11-07
+
+- **Methodology documentation and official source links**: Added comprehensive guide in `docs/en/methodologies.md` comparing `standard`, `uem`, and `custom` methodologies, lifecycle phases, and state file management. Restored official verified source URLs for all `uem` tools (Superpowers, EGM, Harness Engineering, AgentShield, ECC) in READMEs and documentation. Documented explicit tool audit and approval workflow via `maestro tools --approve`, and added Arabic methodology summary section in `docs/ar/quickstart.md`.
+- **Review verdict and feature list fixes**: Supported both `feature_list.json` data formats (top-level list and `{"features": [...]}` object) in `load_feature_list`. Enforced refusal of duplicate feature IDs in `review verdict` and added detection and non-object warnings in `maestro status` to guard against malformed state files found in real-world usage.
+
 ## 0.6.0 — 2026-11-07
 
 - **Safe send refusal**: `send` refuses by default when the Antigravity project is unknown (found when running on `F:\arabictyping`, where the task landed in the selected project instead); `--allow-current-project` allows sending anyway.
