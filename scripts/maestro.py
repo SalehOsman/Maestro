@@ -202,7 +202,7 @@ def cmd_init(a):
         print(f"Antigravity project: {pid}")
     else:
         print("NOTE: Antigravity does not know this folder yet. Open it in the Antigravity agent app "
-              "and start one conversation there, once.")
+              "and start one conversation there, once. 'maestro send' will refuse until the id is found.")
     missing = [r for r, ok, _ in check_tools(p) if not ok and not r.get("optional")]
     if missing:
         print(f"NOTE: {len(missing)} required tool(s) missing for '{m}'; run: maestro tools \"{p.root}\"")
@@ -483,6 +483,11 @@ def cmd_send(a):
 
     project_id = agy_project.resolve(str(p.root))
     if not project_id:
+        if not a.allow_current_project:
+            raise Fail(f"Antigravity does not know {p.root} yet, so the task would land in whatever "
+                       "project is selected. Open the folder in the Antigravity agent app, start one "
+                       f"conversation there, then run 'maestro init {p.root}' until it prints the project id. "
+                       "(To send to the currently selected project anyway: --allow-current-project)")
         print(f"WARN: no Antigravity project found for {p.root} (open it in Antigravity once); "
               "the prompt goes to the currently selected project.")
     rules = p.dot / "EXECUTOR_RULES.md"
@@ -611,6 +616,8 @@ def main(argv=None):
     s = sub.add_parser("testdiff"); s.add_argument("project"); s.add_argument("--base"); s.set_defaults(fn=cmd_testdiff)
     s = sub.add_parser("send");    s.add_argument("project"); s.add_argument("task", nargs="?")
     s.add_argument("--no-enter", action="store_true", help="window mode: only draft the prompt")
+    s.add_argument("--allow-current-project", action="store_true",
+                   help="send to currently selected project if Antigravity does not know this project yet")
     s.set_defaults(fn=cmd_send)
     s = sub.add_parser("wait");    s.add_argument("project"); s.add_argument("task", nargs="?")
     s.add_argument("--timeout", type=int, default=45, help="minutes (default 45)"); s.set_defaults(fn=cmd_wait)

@@ -19,7 +19,7 @@ duty, the two stop points, review depth by risk, and severities and rounds.
 | `init <project> [--methodology standard\|uem\|custom]` | Sets up `.maestro/`: config, rules, roles, plans, reviews. `standard` and `uem` also create `feature_list.json`, `progress.md` and `session-handoff.md` at the root if they are missing. Safe to re-run. |
 | `tools <project> [--approve ID...]` | Shows the methodology's tools: source, pinned version, OK or MISSING. `--approve` writes an install task with the exact pinned commands. |
 | `new <project> "<title>" --feature ID` | Next feature brief (`task-NNN.md`). Fill every `{{...}}` before sending. |
-| `send <project> [NNN]` | Sends the brief to Antigravity in the right project and presses Enter. Exit 2 = drafted only: a desktop notification asks the user to press Enter. |
+| `send <project> [NNN] [--allow-current-project]` | Sends the brief to Antigravity in the right project and presses Enter. Exit 2 = drafted only: a desktop notification asks the user to press Enter. |
 | `wait <project> [NNN] [--timeout MIN]` | Run in the **background**. Exit 0 = report ready. Exit 3 = `QUESTION: <id>`, plus `(CHECKPOINT: plan)` at a plan stop point. Exit 1 = timeout. |
 | `answer <project> <id> "<text>"` or `answer <project> <id> --file <path>` | Answers a question or checkpoint, and the executor's blocked call returns it. **Multi-line answers (corrections, findings) must use `--file`.** On Windows, `cmd.exe` cuts a command-line argument at its first newline. |
 | `heldout <project> add\|list\|run <feature> [files]` | Hidden acceptance tests, stored outside the repository. `run` only works while no task is in flight. |
@@ -38,8 +38,10 @@ duty, the two stop points, review depth by risk, and severities and rounds.
      and AgentShield tools.
    - `custom`: the project's own workflow. Maestro enforces only the minimum contract. Your review
      stays complete.
-2. Run `init --methodology <choice>`. If it says that Antigravity does not know the folder, ask
-   the user to open the folder in the Antigravity agent app and start one conversation there.
+2. Run `init --methodology <choice>`. `init` must print `Antigravity project: <id>` before any
+   `send`. If `send` refuses for an unknown project, ask the user to open the folder in the
+   Antigravity agent app and start one conversation there, then rerun `init`. Never use
+   `--allow-current-project` unless the user asks for it explicitly.
 3. Check `.maestro/config.json`: `verify_cmd`, `test_cmd`, `mutation_cmd`, `heldout_cmd` (with
    `{dir}`), `base_branch`, and `review.full_review_paths` / `full_review_topics` (the project's
    high-risk areas). Fix them with the user.

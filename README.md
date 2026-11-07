@@ -120,7 +120,7 @@ The CLI launcher is `maestro.cmd` on Windows and `./maestro` on macOS/Linux. `py
 | `maestro init <project> [--methodology standard\|uem\|custom]` | Create `<project>/.maestro/`. Safe to re-run to refresh templates and rules. |
 | `maestro tools <project> [--approve ID...]` | Check methodology tools; write an install task for approved tools |
 | `maestro new <project> "<title>" [--feature ID]` | Create the next feature brief (`task-NNN.md`) |
-| `maestro send <project> [NNN] [--no-enter]` | Send task NNN (default: latest) to Antigravity |
+| `maestro send <project> [NNN] [--no-enter] [--allow-current-project]` | Send task NNN (default: latest) to Antigravity |
 | `maestro wait <project> [NNN] [--timeout 45]` | Block until report arrives (no tokens spent; exits 3 on questions/checkpoints) |
 | `maestro answer <project> <question-id> "<text>" \| --file FILE` | Answer an executor question (use `--file` for multi-line answers) |
 | `maestro heldout <project> add\|list\|run <feature> [files]` | Manage hidden acceptance tests stored outside the repository |

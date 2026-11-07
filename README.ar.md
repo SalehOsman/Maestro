@@ -120,7 +120,7 @@ python install.py --uninstall
 | `maestro init <project> [--methodology standard\|uem\|custom]` | إنشاء مجلد `<project>/.maestro/`. يمكن إعادة تشغيله بأمان لتحديث القوالب والقواعد. |
 | `maestro tools <project> [--approve ID...]` | فحص أدوات المنهجية؛ وكتابة مهمة تثبيت للأدوات الموافق عليها |
 | `maestro new <project> "<title>" [--feature ID]` | إنشاء وصف المهمة التالية (`task-NNN.md`) |
-| `maestro send <project> [NNN] [--no-enter]` | إرسال المهمة `NNN` (افتراضياً: أحدث مهمة) إلى Antigravity |
+| `maestro send <project> [NNN] [--no-enter] [--allow-current-project]` | إرسال المهمة `NNN` (افتراضياً: أحدث مهمة) إلى Antigravity |
 | `maestro wait <project> [NNN] [--timeout 45]` | الانتظار حتى وصول التقرير (دون استهلاك توكن؛ ينتهي بالرمز 3 عند وجود أسئلة أو نقاط مراجعة) |
 | `maestro answer <project> <question-id> "<text>" \| --file FILE` | الإجابة عن سؤال المنفّذ (استخدم `--file` للإجابات متعددة الأسطر) |
 | `maestro heldout <project> add\|list\|run <feature> [files]` | إدارة اختبارات القبول المحجوبة والمخزنة خارج المستودع |

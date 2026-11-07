@@ -180,6 +180,51 @@ class TestCliSenderAndOptions(BaseCliTest):
         self.assertEqual(code, 1)
         self.assertIn("still in flight", out + err)
 
+    def test_send_refuses_unknown_project(self):
+        proj = os.path.join(self.test_dir, "proj")
+        os.makedirs(proj, exist_ok=True)
+        self.run_cli("init", proj)
+        self.run_cli("new", proj, "task 1")
+
+        code, out, err = self.run_cli("send", proj, "1")
+        self.assertEqual(code, 1)
+        combined = out + err
+        self.assertIn("error: Antigravity does not know", combined)
+        self.assertIn("--allow-current-project", combined)
+        active = os.path.join(proj, ".maestro", "active.json")
+        self.assertFalse(os.path.exists(active))
+
+        # Also verify in-process: delivery safety net (which raises) must not be hit
+        code_in, out_in, err_in = self.run_in_process("send", proj, "1")
+        self.assertEqual(code_in, 1)
+        self.assertIn("error: Antigravity does not know", out_in + err_in)
+        self.assertFalse(os.path.exists(active))
+
+    def test_send_allow_current_project_attempts_delivery(self):
+        proj = os.path.join(self.test_dir, "proj")
+        os.makedirs(proj, exist_ok=True)
+        self.run_cli("init", proj)
+        self.run_cli("new", proj, "task 1")
+
+        calls = []
+
+        def fake_send(prompt, project_id, press_enter=True):
+            calls.append((prompt, project_id, press_enter))
+            return ("sent", "")
+
+        with patch.object(sender, "send_prompt", side_effect=fake_send):
+            code, out, err = self.run_in_process("send", proj, "1", "--allow-current-project")
+
+        self.assertEqual(code, 0)
+        self.assertIn("WARN: no Antigravity project found", out + err)
+        self.assertEqual(len(calls), 1)
+        self.assertIsNone(calls[0][1])  # project_id=None
+        active = os.path.join(proj, ".maestro", "active.json")
+        self.assertTrue(os.path.exists(active))
+        with open(active, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        self.assertEqual(data.get("task"), "001")
+
 
 class TestCliInit(BaseCliTest):
 
@@ -191,6 +236,8 @@ class TestCliInit(BaseCliTest):
 
         code, out, _ = self.run_cli("init", proj)
         self.assertEqual(code, 0)
+        self.assertIn("NOTE: Antigravity does not know this folder yet", out)
+        self.assertIn("'maestro send' will refuse until the id is found", out)
 
         cfg_path = os.path.join(proj, ".maestro", "config.json")
         self.assertTrue(os.path.exists(cfg_path))

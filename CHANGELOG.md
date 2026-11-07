@@ -2,6 +2,7 @@
 
 ## 0.6.0 — 2026-11-07
 
+- **Safe send refusal**: `send` refuses by default when the Antigravity project is unknown (found when running on `F:\arabictyping`, where the task landed in the selected project instead); `--allow-current-project` allows sending anyway.
 - **Documentation split**: Complete documentation in English (`docs/en/`), with parallel Arabic documentation for the README and quick start guide (`README.ar.md` and `docs/ar/quickstart.md`).
 - **Comprehensive documentation in `docs/en/`**: Added `docs/en/quickstart.md` (end-to-end walkthrough, state files reference, and troubleshooting) and `docs/en/architecture.md` (deep dive into delivery mechanics, MCP protocols, and quality gates).
 - **Official test suite**: 82 unit tests with strict process-level environment isolation (`HOME`, `USERPROFILE`, `LOCALAPPDATA`, `MAESTRO_HELDOUT_HOME`, `MAESTRO_MCP_LOG`) and mock execution boundaries.
